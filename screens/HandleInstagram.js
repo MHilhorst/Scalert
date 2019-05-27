@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Platform,StatusBar,Image,ScrollView, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+const localhost = require('../config');
 
 class HandleInstagram extends React.Component{
   constructor(props){
@@ -15,7 +16,7 @@ class HandleInstagram extends React.Component{
     };
 
   componentDidMount(){
-    fetch('http://192.168.1.8:5000/api/instagram/authorize_user', {
+    fetch(`http://${localhost}/api/instagram/authorize_user`, {
           method: 'POST',
           credentials: 'include',
           headers: {

@@ -6,6 +6,8 @@ import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-ba
 import BasicInformation from './BasicInformation';
 import SessionItems from './components/SessionItems';
 import MyHostSessions from './MyHostSessions';
+const localhost = require('../config');
+
 export default class MySessions extends React.Component {
   constructor(props){
     super(props);
@@ -15,7 +17,7 @@ export default class MySessions extends React.Component {
       }
   }
   componentDidMount(){
-    fetch('http://192.168.1.8:5000/api/listings/mySessionsP',{method:"GET",credentials:"include"}).then(res => res.json().then(
+    fetch(`http://${localhost}/api/listings/mySessionsP`,{method:"GET",credentials:"include"}).then(res => res.json().then(
       data => {
         this.setState({mySessionsP:data})
         console.log(this.state.mySessionsP)

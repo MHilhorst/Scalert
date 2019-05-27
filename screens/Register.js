@@ -7,6 +7,7 @@ import * as Animatable from 'react-native-animatable';
 import Profile from './Profile';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Icon from 'react-native-vector-icons/Ionicons';
+const localhost = require('../config');
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
 
@@ -59,7 +60,7 @@ export default class Register extends React.Component {
   }
   password(){
     console.log(this.state.email)
-    fetch(`http://192.168.1.8:5000/api/duplicateUsername/${this.state.email}`,{
+    fetch(`http://${localhost}/api/duplicateUsername/${this.state.email}`,{
       method:"GET",
       headers:{
         "Content-Type":"application/json"
@@ -94,7 +95,7 @@ export default class Register extends React.Component {
   }
   handleSubmit(event) {
     console.log(this.state)
-  fetch('http://192.168.1.8:5000/api/register', {
+  fetch(`http://${localhost}/api/register`, {
     method: 'POST',
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({"username":this.state.email,"password":this.state.password,"age":this.state.age,"gender":this.state.gender,"name":this.state.name})

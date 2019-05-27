@@ -3,6 +3,7 @@ import { StyleSheet, Text, View , TextInput, Picker,TouchableOpacity,Keyboard} f
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
 import HeaderHospeasy from './HeaderHospeasy';
 import HandleInstagram from './HandleInstagram.js';
+const localhost = require('../config');
 
 export default class BasicInformation extends React.Component {
   constructor(props){
@@ -13,7 +14,7 @@ export default class BasicInformation extends React.Component {
   }
 
   handleEmailChange(){
-    fetch('http://192.168.1.8:5000/api/profile/update/username',{
+    fetch(`http://${localhost}/api/profile/update/username`,{
       method:'POST',
       credentials:'include',
       headers:{
@@ -32,7 +33,7 @@ export default class BasicInformation extends React.Component {
 }
 
   handleUpdate(){
-    fetch('http://192.168.1.8:5000/api/profile/update/profile',{
+    fetch(`http://${localhost}/api/profile/update/profile`,{
       method:'POST',
       credentials:"include",
       headers:{
@@ -43,7 +44,7 @@ export default class BasicInformation extends React.Component {
   }
 
   componentDidMount(){
-    fetch(`http://192.168.1.8:5000/api/profile`, {method:"GET",credentials:"include",headers:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data =>{
+    fetch(`http://${localhost}/api/profile`, {method:"GET",credentials:"include",headers:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data =>{
       this.setState({data})
     })).catch(err => console.log(err));
   }

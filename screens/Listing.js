@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity, TextInput,Button,ScrollView, Image,Dimensions} from 'react-native';
 import { Container, Header, Content, Form, Item, Input } from 'native-base';
 import HeaderHospeasy from './HeaderHospeasy';
-
+const localhost = require('../config');
 const { width } = Dimensions.get('window');
 
 export default class Listing extends React.Component {
@@ -18,7 +18,7 @@ export default class Listing extends React.Component {
   handleSubmit(){
       console.log("begin")
       if(!this.state.requested){
-      fetch(`http://192.168.1.8:5000/api/listings/join/id/${this.props.navigation.getParam('listingId','NO-ID')}`,{
+      fetch(`http://${localhost}/api/listings/join/id/${this.props.navigation.getParam('listingId','NO-ID')}`,{
         method:"POST",
         credentials:"include"
       }).then(data => data.json().then(res => {
@@ -42,7 +42,7 @@ export default class Listing extends React.Component {
 
 
   componentDidMount(){
-    fetch(`http://192.168.1.8:5000/api/listings/${this.props.navigation.getParam('listingName','NO-NAME')}/${this.props.navigation.getParam('listingId','NO-ID')}`, {
+    fetch(`http://${localhost}/api/listings/${this.props.navigation.getParam('listingName','NO-NAME')}/${this.props.navigation.getParam('listingId','NO-ID')}`, {
       method:"GET"
     }).then(response => response.json()).then(data => {
       this.setState({listing: data.map(item => ({

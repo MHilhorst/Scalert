@@ -4,7 +4,7 @@ import HeaderHospeasy from './HeaderHospeasy';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput,Button} from 'react-native';
 import { Container, Header, Content, Form, Item, Input } from 'native-base';
 import AccountPage from './AccountPage';
-
+const localhost = require('../config');
 export default class Profile extends React.Component {
   constructor(props){
     super(props);
@@ -17,7 +17,7 @@ export default class Profile extends React.Component {
   handleSubmit(event){
     event.preventDefault();
     console.log("gang")
-    fetch('http://192.168.1.8:5000/api/login', {
+    fetch(`http://${localhost}/api/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {

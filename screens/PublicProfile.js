@@ -2,6 +2,9 @@ import * as React from 'react'
 import PersonalProfile from './components/PersonalProfile';
 import { StyleSheet, Text, View,Platform , Image,BackHandler} from 'react-native';
 import HeaderHospeasy from './HeaderHospeasy';
+const localhost = require('../config');
+
+
 class PublicProfile extends React.Component {
   constructor(props){
     super(props)
@@ -10,7 +13,7 @@ class PublicProfile extends React.Component {
   }
 
 componentDidMount(){
-    fetch(`http://192.168.1.8:5000/api/profile/public/${this.props.navigation.getParam('profileId','NO-NAME')}`,{method:"GET",credentials:"include",header:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data => this.setState({data}))).catch(err => console.log(err))
+    fetch(`http://${localhost}/api/profile/userInformation/${this.props.navigation.getParam('profileId','NO-NAME')}`,{method:"GET",credentials:"include",header:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data => this.setState({data}))).catch(err => console.log(err))
   }
 
   render(){

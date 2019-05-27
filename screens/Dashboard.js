@@ -4,6 +4,9 @@ import HeaderHospeasy from './HeaderHospeasy';
 import { StyleSheet, Text, View,Platform,TouchableOpacity,Image,ScrollView,SafeAreaView } from 'react-native';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
 import DashboardParticipantUserRequest from './DashboardParticipantUserRequest';
+import DashboardParticipantAccepted from './DashboardParticipantAccepted';
+const localhost = require('../config');
+
 
 export default class Dashboard extends React.Component {
   constructor(props){
@@ -13,13 +16,11 @@ export default class Dashboard extends React.Component {
   }
 
   reRender(){
-  console.log("reRender Fired")
   this.forceUpdate()
   }
 
   componentDidMount(){
-    console.log("requesting")
-    fetch(`http://192.168.1.8:5000/api/dashboard/overview/${this.props.navigation.getParam('listingId','NO-ID')}`,{method:"GET",credentials:"include"}).then(res => res.json().then(
+    fetch(`http://${localhost}/api/dashboard/overview/${this.props.navigation.getParam('listingId','NO-ID')}`,{method:"GET",credentials:"include"}).then(res => res.json().then(
       data =>{
         this.setState({listing:data.listing,hospiteerSession:data.hospiteerSession,usersWaitingReview:data.usersWaitingReview})
       }
@@ -44,6 +45,14 @@ export default class Dashboard extends React.Component {
                 {this.state.usersWaitingReview.map(user => {
                   return(<DashboardParticipantUserRequest reRender={this.reRender} navigation={this.props.navigation} key={user._id} listingId={this.state.listing[0]._id} user={user}/>)
                 })}
+              </View>
+              <View style={{marginTop:20,marginHorizontal:20}}>
+                <View style={{marginBottom:20}}>
+                <Text style={{fontSize:24,fontWeight:'800'}}>Participants acepted {this.state.hospiteerSession.AcceptedApplicants.length}/{this.state.listing[0].amountOfParticipants}</Text>
+                </View>
+                {this.state.hospiteerSession.AcceptedApplicants.map(user => {
+                  return(<DashboardParticipantAccepted navigation={this.props.navigation} key={user} user={user}/>)})
+                }
               </View>
         </SafeAreaView>
     )

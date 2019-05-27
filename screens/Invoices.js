@@ -5,6 +5,7 @@ import { StyleSheet, Text, View,Platform,ScrollView} from 'react-native';
 import InvoiceView from './components/InvoiceView';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
 import BasicInformation from './BasicInformation';
+const localhost = require('../config');
 
 export default class Invoices extends React.Component {
   constructor(props){
@@ -13,7 +14,7 @@ export default class Invoices extends React.Component {
   }
 
   componentDidMount(){
-    fetch('http://192.168.1.8:5000/api/tikkie/new',{method:"GET",credentials:"include"}).then(response => response.json().then(data => {
+    fetch(`http://${localhost}/api/tikkie/new`,{method:"GET",credentials:"include"}).then(response => response.json().then(data => {
       console.log(data)
       this.setState({data})
     }))

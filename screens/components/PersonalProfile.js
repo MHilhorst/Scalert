@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet, TouchableOpacity,Text, View, SafeAreaView, TextInput, Platform,StatusBar,Image,ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderHospeasy from '../HeaderHospeasy';
-
+const localhost = require('../../config');
 class PersonalProfile extends React.Component{
   constructor(props){
     super(props)
@@ -10,7 +10,7 @@ class PersonalProfile extends React.Component{
   }
 
   componentDidMount(){
-      fetch('http://192.168.1.8:5000/api/profile',{method:"GET",credentials:"include"}).then(data => data.json().then(data => {
+      fetch(`http://${localhost}/api/profile`,{method:"GET",credentials:"include"}).then(data => data.json().then(data => {
       this.setState({userData:data})
       console.log(this.state.userData)
     })).catch(err => console.log(err))

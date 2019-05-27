@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 import Category from './components/Category';
 import CategorySearch from './components/CategorySearch';
+const localhost = require('../config');
 
 
 export default class Explore extends React.Component {
@@ -21,7 +22,7 @@ export default class Explore extends React.Component {
 
   onSubmit(event){
     event.preventDefault();
-    fetch(`http://192.168.1.8:5000/api/listings/${this.state.location}`).then(
+    fetch(`http://${localhost}/api/listings/${this.state.location}`).then(
       response => response.json().then(data => {
         console.log(data)
         if(data.error){
@@ -36,7 +37,7 @@ export default class Explore extends React.Component {
     ).catch(err => console.log(err))
   }
   componentDidMount(){
-    fetch("http://192.168.1.8:5000/api/listings/Amsterdam",{method:"GET"}).then(result => result.json()).then(data => {
+    fetch(`http://${localhost}/api/listings/Amsterdam`,{method:"GET"}).then(result => result.json()).then(data => {
       this.setState({data})
       console.log(data)
     }).catch(err => console.log(err))
@@ -72,7 +73,7 @@ export default class Explore extends React.Component {
                   </CategorySearch>
                   })}
             </View>
-            </ScrollView>
+          </ScrollView>
           </View>
         </View>
         </SafeAreaView>
@@ -109,6 +110,10 @@ export default class Explore extends React.Component {
                             this.props.navigation.navigate('Listing',{listingId:item._id,listingName:item.name})
                         }} style={{width:400,height:400}} name={item.location}></Category>)})}
               </ScrollView>
+            </View>
+            <View style={{flex:1,marginHorizontal:20,marginTop:20}}>
+              <Text style={{fontSize:24, fontWeight:'700'}}>Op Zoek naar een kamer in Utrecht?</Text>
+
             </View>
           </View>
         </View>

@@ -4,6 +4,7 @@ import HeaderHospeasy from './HeaderHospeasy';
 import { StyleSheet, Text, View,Platform } from 'react-native';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
 import BasicInformation from './BasicInformation';
+const localhost = require('../config');
 
 export default class AccountPage extends React.Component {
   constructor(props){
@@ -12,7 +13,7 @@ export default class AccountPage extends React.Component {
   }
   componentDidMount(){
     console.log("accountpage")
-    fetch(`http://192.168.1.8:5000/api/profile`, {method:"GET",credentials:"include"}).then(res => res.json().then(data =>{
+    fetch(`http://${localhost}/api/profile`, {method:"GET",credentials:"include"}).then(res => res.json().then(data =>{
       this.setState({data})
     })).catch(err => console.log(err));
   }
@@ -28,14 +29,6 @@ export default class AccountPage extends React.Component {
           <ListItem onPress={() => this.props.navigation.navigate('BasicInformation')}>
             <Left>
               <Text>Basic Information</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
-          <ListItem>
-           <Left>
-              <Text>My Upcoming Sessions</Text>
             </Left>
             <Right>
               <Icon name="arrow-forward" />

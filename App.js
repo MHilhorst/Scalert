@@ -89,6 +89,12 @@ const MySessionsStack = createStackNavigator({
     navigationOptions:{
       header:null
     }
+  },
+  ProfileViewAccepted:{
+    screen:PublicProfile,
+    navigationOptions:{
+      header:null
+    }
   }
 })
 ProfileStack.navigationOptions = ({ navigation }) => {

@@ -3,6 +3,7 @@ import PersonalProfile from './components/PersonalProfile';
 import { StyleSheet, Text, View,Platform , Image,BackHandler,Dimensions,ScrollView,TouchableOpacity} from 'react-native';
 import HeaderHospeasy from './HeaderHospeasy';
 import Icon from 'react-native-vector-icons/Ionicons';
+const localhost = require('../config');
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 class ProfileForSession extends React.Component {
@@ -19,11 +20,11 @@ class ProfileForSession extends React.Component {
   }
 
   componentDidMount(){
-    fetch(`http://192.168.1.8:5000/api/profile/public/${this.props.navigation.getParam('profileId','NO-NAME')}`,{method:"GET",credentials:"include",header:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data => this.setState({data}))).catch(err => console.log(err))
+    fetch(`http://${localhost}/api/profile/public/${this.props.navigation.getParam('profileId','NO-NAME')}`,{method:"GET",credentials:"include",header:{"Cache-Control":"no-cache"}}).then(res => res.json().then(data => this.setState({data}))).catch(err => console.log(err))
   }
 
   handleAcceptUser(){
-    fetch(`http://192.168.1.8:5000/api/dashboard/accept/${this.props.navigation.getParam('listingId','NO-ID')}/${this.props.navigation.getParam('profileId',"NO-NAME")}`,{method:"POST",credentials:"include"}).then(res => res.json().then(data => {
+    fetch(`http://${localhost}/api/dashboard/accept/${this.props.navigation.getParam('listingId','NO-ID')}/${this.props.navigation.getParam('profileId',"NO-NAME")}`,{method:"POST",credentials:"include"}).then(res => res.json().then(data => {
         if(data.ok){
           this.props.navigation.state.params.onBack();
         }
@@ -31,7 +32,7 @@ class ProfileForSession extends React.Component {
   }
 
   handleDeclineUser(){
-    fetch(`http://192.168.1.8:5000/api/dashboard/decline/${this.props.navigation.getParam('listingId','NO-ID')}/${this.props.navigation.getParam('profileId',"NO-NAME")}`,{method:"POST",credentials:"include"}).then(res => res.json().then(data => {
+    fetch(`http://${localhost}/api/dashboard/decline/${this.props.navigation.getParam('listingId','NO-ID')}/${this.props.navigation.getParam('profileId',"NO-NAME")}`,{method:"POST",credentials:"include"}).then(res => res.json().then(data => {
         if(data.ok){
           console.log("succesfully declined user")
           this.props.navigation.goBack()

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Platform,StatusBar,Image,ScrollView,Form } from 'react-native';
-
+const localhost = require('../config');
 function Auth(ComponentToProtect) {
   return class extends React.Component {
     constructor(props){
@@ -12,7 +12,7 @@ function Auth(ComponentToProtect) {
     }
 
     componentDidMount(){
-      fetch('http://192.168.1.8:5000/api/profile', {
+      fetch(`http://${localhost}/api/profile`, {
         credentials:'include',
         method:"GET"
       }).then(data => {

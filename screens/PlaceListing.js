@@ -4,7 +4,7 @@ import HeaderHospeasy from './HeaderHospeasy';
 import {ImagePicker} from 'expo';
 import DatePicker from 'react-native-datepicker';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
-
+const localhost = require('../config');
 
 export default class PlaceListing extends React.Component {
   constructor(props){
@@ -17,7 +17,7 @@ export default class PlaceListing extends React.Component {
 
   handleUploadSubmit(){
     console.log(this.state.date)
-    fetch('http://192.168.1.8:5000/api/listings/addMobile',{
+    fetch(`http://${localhost}/api/listings/addMobile`,{
       method:"POST",
       credentials:'include',
       headers:{
@@ -41,7 +41,7 @@ export default class PlaceListing extends React.Component {
 };
 
   componentDidMount(){
-    fetch('http://192.168.1.8:5000/api/profile', {
+    fetch(`http://${localhost}/api/profile`, {
       credentials:'include',
       method:"GET"
     }).then(data => {
@@ -61,12 +61,13 @@ export default class PlaceListing extends React.Component {
     const dateToday = new Date().toLocaleDateString();
     if(this.state.authenticated){
       return(
+        <View style={{flex:1}}>
+        <HeaderHospeasy />
         <ScrollView>
         <View>
-          <HeaderHospeasy />
           <View style={styles.red}>
             <Text style={styles.listHeader}>Basic Information</Text>
-          <List>
+          <List style={{marginRight:20}}>
             <ListItem>
             <TextInput
               value={this.state.listingName}
@@ -138,15 +139,18 @@ export default class PlaceListing extends React.Component {
             </ListItem>
           </List>
         </View>
-        <TouchableOpacity style={styles.button} onPress={this.handleUploadSubmit}>
-          <View style={[styles.countContainer]}>
+        <TouchableOpacity onPress={this.handleUploadSubmit}>
+          <View style={{marginTop:20,marginBottom:30,marginHorizontal:40,backgroundColor:"#ff5a5f",borderRadius:5,paddingVertical:15,paddingHorizontal:30,alignItems:'center',justifyContent:'center'}}>
             <Text style={[styles.loginText]}>
               Request Hospiteeravond
              </Text>
            </View>
-          </TouchableOpacity>
+         </TouchableOpacity>
+
     </View>
     </ScrollView>
+    </View>
+
       )
     }else{
       return null

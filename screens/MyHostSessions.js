@@ -5,7 +5,7 @@ import {ImagePicker} from 'expo';
 import DatePicker from 'react-native-datepicker';
 import SessionItemsHost from './components/SessionItemsHost';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
-
+const localhost = require('../config');
 
 export default class MyHostSessions extends React.Component {
   constructor(props){
@@ -14,7 +14,7 @@ export default class MyHostSessions extends React.Component {
   }
 
   componentDidMount(){
-    fetch('http://192.168.1.8:5000/api/listings/mySessionsH',{method:"GET",credentials:'include'}).then(res => res.json().then(
+    fetch(`http://${localhost}/api/listings/mySessionsH`,{method:"GET",credentials:'include'}).then(res => res.json().then(
       data => {
         this.setState({data})
         console.log(data)
