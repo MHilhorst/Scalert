@@ -5,7 +5,7 @@ export default class Saved extends React.Component {
   render() {
     return (
       <View style={styles}>
-        <Text>iojojojiojioSDa</Text>
+        <Text>asdasdadasds</Text>
       </View>
     );
   }
