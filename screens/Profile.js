@@ -9,11 +9,24 @@ export default class Profile extends React.Component {
   constructor(props){
     super(props);
     this.state ={
-      notLoggedIn:true
     }
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.isLoggedOut = this.isLoggedOut.bind(this)
   }
 
+  componentDidMount(){
+    fetch(`http://${localhost}/api/checkLoggedIn`,{method:"GET",credentials:"include"}).then(res => res.json().then(data => {
+      if(data.userLoggedIn){
+        this.setState({loggedIn:true})
+      }else{
+        this.setState({loggedIn:false})
+      }
+    })).catch(err => console.log(err))
+  }
+
+  isLoggedOut(){
+    this.setState({loggedIn:false,username:"",password:""})
+  }
   handleSubmit(event){
     event.preventDefault();
     console.log("gang")
@@ -29,7 +42,7 @@ export default class Profile extends React.Component {
         if(response.status === 200){
           this.setState({
             invalid:false,
-            notLoggedIn:false
+            loggedIn:true
           });
           console.log("yes")
         }else{
@@ -46,7 +59,7 @@ export default class Profile extends React.Component {
     const BLUE = "#428AF8";
     const LIGHT_GRAY = "#D3D3D3";
 
-    if(this.state.notLoggedIn){
+    if(!this.state.loggedIn){
     return (
       <View>
       <HeaderHospeasy />
@@ -85,10 +98,12 @@ export default class Profile extends React.Component {
       </View>
     </View>
     );
-  }else{
+  }if(this.state.loggedIn){
       return(
-        <AccountPage navigation={this.props.navigation}/>
+        <AccountPage navigation={this.props.navigation} isLoggedOut={this.isLoggedOut}/>
       )
+  }else{
+    return null
   }
 }
 }

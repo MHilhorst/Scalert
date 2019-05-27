@@ -10,6 +10,14 @@ export default class AccountPage extends React.Component {
   constructor(props){
     super(props);
     this.state = {}
+    this.handleLogout = this.handleLogout.bind(this)
+  }
+
+  handleLogout(){
+    fetch(`http://${localhost}/api/logout`,{method:"GET",credentials:"include"}).then(res => res.json().then(data => {
+      console.log(data)
+      this.props.isLoggedOut()
+    }))
   }
   componentDidMount(){
     console.log("accountpage")
@@ -17,6 +25,7 @@ export default class AccountPage extends React.Component {
       this.setState({data})
     })).catch(err => console.log(err));
   }
+
   render() {
     if(this.state.data){
       console.log(this.state.data)
@@ -45,6 +54,14 @@ export default class AccountPage extends React.Component {
           <ListItem onPress={() => this.props.navigation.navigate('PublicProfile',{profileId:this.state.data._id})}>
             <Left>
               <Text>View Public Profile</Text>
+            </Left>
+            <Right>
+              <Icon name="arrow-forward" />
+            </Right>
+          </ListItem>
+          <ListItem onPress={this.handleLogout}>
+            <Left>
+              <Text>Logout</Text>
             </Left>
             <Right>
               <Icon name="arrow-forward" />

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 import Category from './components/Category';
 import CategorySearch from './components/CategorySearch';
+import CategoryHighlight from './components/CategoryHighlight';
 const localhost = require('../config');
 
 
@@ -99,7 +100,7 @@ export default class Explore extends React.Component {
               <Text style={{fontSize:24, fontWeight:'700',paddingHorizontal:20}}>
               Hospiteer avonden in Amsterdam
               </Text>
-              <View style={{height:130,marginTop:20}}>
+              <View style={{height:130,marginTop:20,marginRight:20}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                   {this.state.data.map(item => {
 
@@ -108,12 +109,14 @@ export default class Explore extends React.Component {
                     return(
                         <Category key={item._id} hospiDate={itemDate} amountOfParticipants={item.amountOfParticipants || dateToday} acceptedApplicants={item.acceptedApplicants.length} imageUri={{uri:item.images[0].url}} onPress={() => {
                             this.props.navigation.navigate('Listing',{listingId:item._id,listingName:item.name})
-                        }} style={{width:400,height:400}} name={item.location}></Category>)})}
+                        }} style={{width:150,height:150,marginLeft:20}} name={item.location}></Category>)})}
               </ScrollView>
             </View>
             <View style={{flex:1,marginHorizontal:20,marginTop:20}}>
               <Text style={{fontSize:24, fontWeight:'700'}}>Op Zoek naar een kamer in Utrecht?</Text>
-
+              <View style={{marginTop:15,}}>
+              <CategoryHighlight amountOfParticipants="4" acceptedApplicants="1" imageUri={{uri:"https://scontent-ams4-1.xx.fbcdn.net/v/t1.0-9/61109991_2533277816685278_6025193123141910528_n.jpg?_nc_cat=101&_nc_ht=scontent-ams4-1.xx&oh=f8868f720eb36e11cbdd6bbc9e3adc2e&oe=5D8F1C23"}} />
+              </View>
             </View>
           </View>
         </View>
