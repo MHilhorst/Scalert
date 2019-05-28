@@ -1,3 +1,3 @@
-const localhost = "192.168.1.8:5000"
+const localhost = "192.168.43.83:5000"
 
 module.exports = localhost;

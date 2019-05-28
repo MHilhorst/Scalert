@@ -44,7 +44,6 @@ export default class Profile extends React.Component {
             invalid:false,
             loggedIn:true
           });
-          console.log("yes")
         }else{
           this.setState({
             invalid:true

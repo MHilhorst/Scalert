@@ -16,7 +16,6 @@ export default class PlaceListing extends React.Component {
   }
 
   handleUploadSubmit(){
-    console.log(this.state.date)
     fetch(`http://${localhost}/api/listings/addMobile`,{
       method:"POST",
       credentials:'include',
@@ -39,27 +38,27 @@ export default class PlaceListing extends React.Component {
     this.setState({ image: result.base64 });
   }
 };
-
   componentDidMount(){
     fetch(`http://${localhost}/api/profile`, {
       credentials:'include',
       method:"GET"
-    }).then(data => {
-      if(data.status == 200){
-        data.json().then(res => {
-        this.setState({authenticated:true,data:res})
-      })}else{
+    }).then(res=>res.json().then(data => {
+      if(data.error){
         this.setState({authenticated:false})
+      }if(data.username){
+        this.props.handleAuthentication()
+        this.setState({authenticated:true})
       }
-    }).catch(err => console.log(err))
+    })).catch(err => console.log(err))
   }
+
   render() {
+
     const AmountHolders = ["1","2","3","4","5","6","7","8"]
     const Amount = AmountHolders.map((s,i)=> {
       return <Picker.Item key={i} value={s} label={s} />
     })
     const dateToday = new Date().toLocaleDateString();
-    if(this.state.authenticated){
       return(
         <View style={{flex:1}}>
         <HeaderHospeasy />
@@ -146,17 +145,13 @@ export default class PlaceListing extends React.Component {
              </Text>
            </View>
          </TouchableOpacity>
-
     </View>
     </ScrollView>
     </View>
 
       )
-    }else{
-      return null
     }
   }
-}
 const styles = StyleSheet.create({
   red: {
     padding: 25,

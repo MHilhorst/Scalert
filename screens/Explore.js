@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Platform,StatusBar,Image,ScrollView,Form,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Platform,StatusBar,Image,ScrollView,Form,TouchableOpacity,ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { withNavigation } from 'react-navigation';
 import Category from './components/Category';
@@ -38,8 +38,8 @@ export default class Explore extends React.Component {
     ).catch(err => console.log(err))
   }
   componentDidMount(){
-    fetch(`http://${localhost}/api/listings/Amsterdam`,{method:"GET"}).then(result => result.json()).then(data => {
-      this.setState({data})
+    fetch(`http://${localhost}/api/homepage/locations/highlighted`,{method:"GET"}).then(result => result.json()).then(data => {
+      this.setState({amsterdam:data.amsterdam,utrecht:data.utrecht})
       console.log(data)
     }).catch(err => console.log(err))
   }
@@ -80,7 +80,7 @@ export default class Explore extends React.Component {
         </SafeAreaView>
       )
     }
-    if(this.state.data){
+    if(this.state.amsterdam){
       return (
         <SafeAreaView style={{flex:1}}>
             <StatusBar hidden={true} />
@@ -102,7 +102,7 @@ export default class Explore extends React.Component {
               </Text>
               <View style={{height:130,marginTop:20,marginRight:20}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                  {this.state.data.map(item => {
+                  {this.state.amsterdam.map(item => {
 
                     itemDate = item.hospiDate.toString().substring(0,10)
                     console.log(itemDate)
@@ -114,8 +114,12 @@ export default class Explore extends React.Component {
             </View>
             <View style={{flex:1,marginHorizontal:20,marginTop:20}}>
               <Text style={{fontSize:24, fontWeight:'700'}}>Op Zoek naar een kamer in Utrecht?</Text>
-              <View style={{marginTop:15,}}>
-              <CategoryHighlight amountOfParticipants="4" acceptedApplicants="1" imageUri={{uri:"https://scontent-ams4-1.xx.fbcdn.net/v/t1.0-9/61109991_2533277816685278_6025193123141910528_n.jpg?_nc_cat=101&_nc_ht=scontent-ams4-1.xx&oh=f8868f720eb36e11cbdd6bbc9e3adc2e&oe=5D8F1C23"}} />
+              <View style={{marginTop:15,flex:1}}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                  {this.state.amsterdam.map(listing => {return(
+                    <CategoryHighlight key={listing._id} listingName={listing.name} hospiDate="16-07-2019" availableSpots="4" amountOfParticipants="4" acceptedApplicants="1" imageUri={{uri:"https://scontent-ams4-1.xx.fbcdn.net/v/t1.0-9/61109991_2533277816685278_6025193123141910528_n.jpg?_nc_cat=101&_nc_ht=scontent-ams4-1.xx&oh=f8868f720eb36e11cbdd6bbc9e3adc2e&oe=5D8F1C23"}} />
+                  )})}
+              </ScrollView>
               </View>
             </View>
           </View>

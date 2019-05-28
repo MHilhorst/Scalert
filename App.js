@@ -130,7 +130,7 @@ const Navigator = createBottomTabNavigator({
     },
   },
   PlaceListing:{
-    screen:Auth(PlaceListing),
+    screen:PlaceListing,
     navigationOptions:{
       tabBarLabel:"Place Listing",
       tabBarIcon: ({ tintColor }) => (
@@ -170,7 +170,12 @@ const Navigator = createBottomTabNavigator({
         shadowOpacity: 0.5,
         elevation:5
       }
-    }
+    },navigationOptions: ({ navigation }) => ({
+    tabBarOnPress: (scene, jumpToIndex) => {
+      console.log('onPress:', scene.route);
+      jumpToIndex(scene.index);
+    },
+  }),
 })
 
 
