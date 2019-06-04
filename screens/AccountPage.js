@@ -4,6 +4,7 @@ import HeaderHospeasy from './HeaderHospeasy';
 import { StyleSheet, Text, View,Platform } from 'react-native';
 import { Container, Content, List, ListItem, Left, Right, Icon } from 'native-base';
 import BasicInformation from './BasicInformation';
+import AddDescription from './AddDescription';
 const localhost = require('../config');
 
 export default class AccountPage extends React.Component {
@@ -43,14 +44,6 @@ export default class AccountPage extends React.Component {
               <Icon name="arrow-forward" />
             </Right>
           </ListItem>
-          <ListItem onPress={() => this.props.navigation.navigate('Invoices')}>
-            <Left>
-              <Text>Invoices</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </ListItem>
           <ListItem onPress={() => this.props.navigation.navigate('PublicProfile',{profileId:this.state.data._id})}>
             <Left>
               <Text>View Public Profile</Text>
@@ -70,11 +63,11 @@ export default class AccountPage extends React.Component {
         </List>
       </View>
       <View style={styles.red}>
-        <Text style={styles.listHeader}>PREFERENCES</Text>
+        <Text style={styles.listHeader}>ADD PERSONAL INFO</Text>
       <List>
-        <ListItem>
+        <ListItem onPress={() => this.props.navigation.navigate('AddDescription',{description:this.state.data.description})}>
           <Left>
-            <Text>Fill in your preference list</Text>
+            <Text>Personal Bio</Text>
           </Left>
           <Right>
             <Icon name="arrow-forward" />

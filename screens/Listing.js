@@ -16,22 +16,16 @@ export default class Listing extends React.Component {
   }
 
   handleSubmit(){
-      console.log("begin")
       if(!this.state.requested){
       fetch(`http://${localhost}/api/listings/join/id/${this.props.navigation.getParam('listingId','NO-ID')}`,{
         method:"POST",
         credentials:"include"
       }).then(data => data.json().then(res => {
         if(res.succesful == "added"){
-          console.log("yes")
           this.setState({requestText:"Succesfully Requested"})
           this.setState({requested:true})
         }if(res.error){
           this.setState({requestText:"Can't join your own listing"})
-        }
-        else{
-          console.log("no")
-          this.setState({requestText:"Retry"})
         }
       }
     )).catch(err=>console.log(err))
@@ -45,7 +39,7 @@ export default class Listing extends React.Component {
     fetch(`http://${localhost}/api/listings/${this.props.navigation.getParam('listingName','NO-NAME')}/${this.props.navigation.getParam('listingId','NO-ID')}`, {
       method:"GET"
     }).then(response => response.json()).then(data => {
-      this.setState({listing: data.map(item => ({
+      this.setState({listing: data.listing.map(item => ({
         id:item._id,
         name:item.name,
         monthly:item.monthly,
@@ -54,9 +48,8 @@ export default class Listing extends React.Component {
         matchType:item.matchType,
         userId:item.userId,
         image: item.images
-      }))}
+      })),userOfListing:data.userOfListing}
     )
-    console.log(this.state.listing)
     }
     ).catch(err => {
       console.log(err);
@@ -77,6 +70,9 @@ export default class Listing extends React.Component {
                 )})}
             </ScrollView>
           </View>
+          <TouchableOpacity onPress={() => {this.props.navigation.navigate('ProfileExplore',{profileId:this.state.userOfListing[0]._id})}}>
+          <Text style={{marginHorizontal:40,marginTop:20,fontSize:15,fontWeight:'600'}}>Posted By {this.state.userOfListing[0].name}</Text>
+          </TouchableOpacity>
             <Text style={styles.listHeader}>{this.state.listing[0].name}</Text>
             <Text style={styles.description}>{this.state.listing[0].description}</Text>
               <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>

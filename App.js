@@ -6,13 +6,14 @@ import MySessions from './screens/MySessions';
 import Saved from './screens/Saved';
 import BasicInformation from './screens/BasicInformation';
 import Listing from './screens/Listing';
-import Tinder from './screens/Tinder';
 import Dashboard from './screens/Dashboard';
 import ProfileForSession from './screens/ProfileForSession';
 import PlaceListing from './screens/PlaceListing';
 import Register from './screens/Register';
 import Invoices from './screens/Invoices';
+import AddDescription from './screens/AddDescription';
 import PublicProfile from './screens/PublicProfile';
+import SearchListings from './screens/SearchListings';
 import Auth from './screens/Auth';
 import Profile from './screens/Profile';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -29,6 +30,18 @@ const ExploreStack = createStackNavigator({
     navigationOptions:{
       header:null
     }
+  },
+  SearchListings:{
+    screen:SearchListings,
+    navigationOptions:{
+      header:null
+    }
+  },
+  ProfileExplore:{
+    screen:PublicProfile,
+    navigationOptions:{
+      header:null
+    }
   }
 })
 
@@ -38,6 +51,12 @@ const ProfileStack = createStackNavigator({
      navigationOptions: {
               header: null,
           },
+  },
+  AddDescription:{
+    screen:AddDescription,
+    navigationOptions:{
+      header:null,
+    }
   },
   BasicInformation:{
     screen: BasicInformation,
@@ -67,19 +86,13 @@ const ProfileStack = createStackNavigator({
 
 const MySessionsStack = createStackNavigator({
   MySessions:{
-    screen: MySessions,
+    screen: Auth(MySessions),
     navigationOptions:{
       header:null,
     }
   },
   Dashboard:{
     screen: Dashboard,
-    navigationOptions:{
-      header:null
-    }
-  },
-  Tinder:{
-    screen:Tinder,
     navigationOptions:{
       header:null
     }
@@ -108,16 +121,7 @@ ProfileStack.navigationOptions = ({ navigation }) => {
   };
 };
 
-MySessionsStack.navigationOptions = ({ navigation }) => {
-  let tabBarVisible = true;
-  if (navigation.state.routes[navigation.state.index].routeName == "Tinder") {
-    tabBarVisible = false;
-  }
 
-  return {
-    tabBarVisible,
-  };
-};
 
 const Navigator = createBottomTabNavigator({
   Explore:{
@@ -130,7 +134,7 @@ const Navigator = createBottomTabNavigator({
     },
   },
   PlaceListing:{
-    screen:PlaceListing,
+    screen:Auth(PlaceListing),
     navigationOptions:{
       tabBarLabel:"Place Listing",
       tabBarIcon: ({ tintColor }) => (
@@ -170,12 +174,7 @@ const Navigator = createBottomTabNavigator({
         shadowOpacity: 0.5,
         elevation:5
       }
-    },navigationOptions: ({ navigation }) => ({
-    tabBarOnPress: (scene, jumpToIndex) => {
-      console.log('onPress:', scene.route);
-      jumpToIndex(scene.index);
     },
-  }),
 })
 
 

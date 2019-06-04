@@ -15,95 +15,46 @@ export default class Explore extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
   componentWillMount(){
-    this.startHeaderHeight = 70
+    this.startHeaderHeight = 50
     if(Platform.OS == 'android'){
-      this.startHeaderHeight = 70 + StatusBar.currentHeight
+      this.startHeaderHeight = 50 + StatusBar.currentHeight
     }
   }
 
-  onSubmit(event){
-    event.preventDefault();
-    fetch(`http://${localhost}/api/listings/${this.state.location}`).then(
-      response => response.json().then(data => {
-        console.log(data)
-        if(data.error){
-        }else{
-        this.setState({
-          showLocation:true,
-          listings:data,
-          listingsFound:data.length,
-        })
-      }
-    })
-    ).catch(err => console.log(err))
+  onSubmit(){
+    this.props.navigation.navigate('SearchListings',{location:this.state.location})
   }
   componentDidMount(){
     fetch(`http://${localhost}/api/homepage/locations/highlighted`,{method:"GET"}).then(result => result.json()).then(data => {
       this.setState({amsterdam:data.amsterdam,utrecht:data.utrecht})
-      console.log(data)
     }).catch(err => console.log(err))
   }
   render() {
-    if(this.state.showLocation){
-      return (
-        <SafeAreaView style={{flex:1}}>
-            <StatusBar hidden={true} />
-          <View style={{flex:1}}>
-            <View style={{height:this.startHeaderHeight,backgroundColor:'white',borderBottomWidth:1, borderBottomColor:'#dddddd'}}>
-              <View style={{flexDirection:'row',padding:13,backgroundColor:'white',marginTop: Platform.OS == 'android' ? 20: null,marginHorizontal:20,elevation:1,shadowColor:'black',shadowOpacity: 0.2}}>
-              <Icon name='ios-search' size={24} color="#747d8c"/>
-              <TextInput
-                placeholder="Try Amsterdam"
-                placeholderTextColor="#ddd"
-                style={{flex:1,backgroundColor:'white',fontSize:20,marginHorizontal:10}}
-                onSubmitEditing={(event)=>this.onSubmit(event)}
-                onChangeText={text=>this.setState({location:text})} />
-              </View>
-            </View>
-            <View style={{flex:1,backgroundColor:'white'}}>
-              <ScrollView showsVerticalScrollIndicator={false}>
-              <Text style={{fontSize:24, fontWeight:'700',paddingHorizontal:20,marginTop:20}}>
-              {this.state.listingsFound} Hospiteer avonden gevonden in {this.state.location}
-              </Text>
-              <View style={{marginTop:20,marginHorizontal:20}}>
-                  {this.state.listings.map(item => {
-                      itemDate = item.hospiDate.toString().substring(0,10)
-                      return <CategorySearch key={item._id} hospiDate={itemDate} amountOfParticipants={item.amountOfParticipants || dateToday} acceptedApplicants={item.acceptedApplicants.length}imageUri={{uri:item.images[0].url}} name={item.name} onPress={() => {
-                          this.props.navigation.navigate('Listing',{listingId:item._id,listingName:item.name})
-                      }} >
-                  </CategorySearch>
-                  })}
-            </View>
-          </ScrollView>
-          </View>
-        </View>
-        </SafeAreaView>
-      )
-    }
     if(this.state.amsterdam){
       return (
         <SafeAreaView style={{flex:1}}>
             <StatusBar hidden={true} />
           <View style={{flex:1}}>
-            <View style={{height:this.startHeaderHeight,backgroundColor:'white',borderBottomWidth:1, borderBottomColor:'#dddddd'}}>
-              <View style={{flexDirection:'row',padding:13,backgroundColor:'white',marginTop: Platform.OS == 'android' ? 20: null,marginHorizontal:20,elevation:1,shadowColor:'black',shadowOpacity: 0.2}}>
+            <View style={{height:this.startHeaderHeight,backgroundColor:'white',borderBottomWidth:1,borderBottomColor:"#eee"}}>
+              <View style={{flexDirection:'row',padding:13,backgroundColor:'white',marginTop: Platform.OS == 'android' ? 10: null,marginHorizontal:20,}}>
               <Icon name='ios-search' size={24} style={{padding:3}}color="#747d8c"/>
               <TextInput
                 placeholder="Try Amsterdam"
+                underlineColorAndroid="transparent"
                 placeholderTextColor="#ddd"
-                style={{flex:1,backgroundColor:'white',fontSize:20,marginHorizontal:10}}
-                onSubmitEditing={(event)=>this.onSubmit(event)}
+                style={{flex:1,backgroundColor:'white',fontSize:20,marginHorizontal:10,borderWidth:0}}
+                onSubmitEditing={this.onSubmit}
                 onChangeText={text=>this.setState({location:text})} />
               </View>
             </View>
-            <View style={{flex:1,backgroundColor:'white',paddingTop:20}}>
+            <ScrollView>
+            <View style={{flex:1,backgroundColor:'white',marginTop:20,paddingBottom:20}}>
               <Text style={{fontSize:24, fontWeight:'700',paddingHorizontal:20}}>
               Hospiteer avonden in Amsterdam
               </Text>
               <View style={{height:130,marginTop:20,marginRight:20}}>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                   {this.state.amsterdam.map(item => {
-
                     itemDate = item.hospiDate.toString().substring(0,10)
                     console.log(itemDate)
                     return(
@@ -114,15 +65,92 @@ export default class Explore extends React.Component {
             </View>
             <View style={{flex:1,marginHorizontal:20,marginTop:20}}>
               <Text style={{fontSize:24, fontWeight:'700'}}>Op Zoek naar een kamer in Utrecht?</Text>
-              <View style={{marginTop:15,flex:1}}>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <View style={{marginTop:15,flex:1,width:"100%"}}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} pagingEnabled>
                   {this.state.amsterdam.map(listing => {return(
-                    <CategoryHighlight key={listing._id} listingName={listing.name} hospiDate="16-07-2019" availableSpots="4" amountOfParticipants="4" acceptedApplicants="1" imageUri={{uri:"https://scontent-ams4-1.xx.fbcdn.net/v/t1.0-9/61109991_2533277816685278_6025193123141910528_n.jpg?_nc_cat=101&_nc_ht=scontent-ams4-1.xx&oh=f8868f720eb36e11cbdd6bbc9e3adc2e&oe=5D8F1C23"}} />
+                    <CategoryHighlight key={listing._id} listingName={listing.name} hospiDate={listing.hospiDate.toString().substring(0,10)} availableSpots={Number(listing.amountOfParticipants)-Number(listing.acceptedApplicants)} amountOfParticipants={listing.amountOfParticipants} acceptedApplicants={listing.acceptedApplicants} imageUri={{uri:listing.images[0].url}}  onPress={() => {
+                        this.props.navigation.navigate('Listing',{listingId:listing._id,listingName:listing.name})
+                    }}  />
                   )})}
               </ScrollView>
               </View>
             </View>
+            <View style={{flex:1,marginTop:30,marginHorizontal:20}}>
+              <Text style={{fontSize:24, fontWeight:'700'}}>Andere steden</Text>
+              <View style={{flex:1,marginTop:10}}>
+                <TouchableOpacity onPress={()=>{
+                    this.setState({location:"Amsterdam"},()=>{
+                    this.onSubmit()
+                    })
+                  }}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
+                  <View style={{height:50,width:"100%"}}>
+                    <ImageBackground source={{uri:"https://images.unsplash.com/photo-1468436385273-8abca6dfd8d3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1988&q=80"}} style={{flex:1,width:null,height:null,resizeMode:'cover',justifyContent:'center',paddingHorizontal:20,borderRadius:5}}>
+                      <Text style={{color:"#fff",fontSize:24,fontWeight:"800"}}>Amsterdam</Text>
+                    </ImageBackground>
+                  </View>
+                </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={()=>{
+                    this.setState({location:"Utrecht"},()=>{
+                    this.onSubmit()
+                    })
+                  }}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
+                  <View style={{height:50,width:"100%"}}>
+                    <ImageBackground source={{uri:"https://images.unsplash.com/photo-1519662647148-fff8e00fe4ac?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"}} style={{flex:1,width:null,height:null,resizeMode:'cover',justifyContent:'center',paddingHorizontal:20,borderRadius:5}}>
+                      <Text style={{color:"#fff",fontSize:24,fontWeight:"800"}}>Utrecht</Text>
+                    </ImageBackground>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={()=>{
+                  this.setState({location:"Groningen"},()=>{
+                  this.onSubmit()
+                  })
+                }}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
+                  <View style={{height:50,width:"100%"}}>
+                    <ImageBackground source={{uri:"https://images.unsplash.com/photo-1556819793-5acee9fb0a99?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80"}} style={{flex:1,width:null,height:null,resizeMode:'cover',justifyContent:'center',paddingHorizontal:20,borderRadius:5}}>
+                      <Text style={{color:"#fff",fontSize:24,fontWeight:"800"}}>Groningen</Text>
+                    </ImageBackground>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={()=>{
+                  this.setState({location:"Leiden"},()=>{
+                  this.onSubmit()
+                  })
+                }}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
+                  <View style={{height:50,width:"100%"}}>
+                    <ImageBackground source={{uri:"https://images.unsplash.com/photo-1543169964-aee4453d2140?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80"}} style={{flex:1,width:null,height:null,resizeMode:'cover',justifyContent:'center',paddingHorizontal:20,borderRadius:5}}>
+                      <Text style={{color:"#fff",fontSize:24,fontWeight:"800"}}>Leiden</Text>
+                    </ImageBackground>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={()=>{
+                  this.setState({location:"Nijmegen"},()=>{
+                  this.onSubmit()
+                  })
+                }}>
+                <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:15}}>
+                  <View style={{height:50,width:"100%"}}>
+                    <ImageBackground source={{uri:"https://images.unsplash.com/photo-1532937660911-9565a830fa0f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80"}} style={{flex:1,width:null,height:null,resizeMode:'cover',justifyContent:'center',paddingHorizontal:20,borderRadius:5}}>
+                      <Text style={{color:"#fff",fontSize:24,fontWeight:"800"}}>Nijmegen</Text>
+                    </ImageBackground>
+                  </View>
+                </View>
+              </TouchableOpacity>
+              </View>
+            </View>
           </View>
+                  </ScrollView>
         </View>
         </SafeAreaView>
       );

@@ -93,8 +93,15 @@ export default class BasicInformation extends React.Component {
       <List>
         <ListItem>
           <Left>
-            {!this.state.data.instagram && <HandleInstagram />}
-            {this.state.data.instagram && <Text>{this.state.data.instagram}</Text>}
+            <HandleInstagram profile={this.state.data}/>
+          </Left>
+          <Right>
+            <Icon name="arrow-forward" />
+          </Right>
+        </ListItem>
+        <ListItem>
+          <Left>
+            <Text>{this.state.data.instagram || "No Instagram"}</Text>
           </Left>
           <Right>
             <Icon name="arrow-forward" />

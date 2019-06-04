@@ -15,18 +15,29 @@ export default class MySessions extends React.Component {
       participantUnderline:true,
       hostUnderline:false,
       }
+      this.getSessions = this.getSessions.bind(this)
   }
-  componentDidMount(){
+  getSessions(){
     fetch(`http://${localhost}/api/listings/mySessionsP`,{method:"GET",credentials:"include"}).then(res => res.json().then(
       data => {
-        this.setState({mySessionsP:data})
-        console.log(this.state.mySessionsP)
+        this.setState({waiting:data.resultsWaiting,accepted:data.resultsAccepted,declined:data.resultsDeclined,show:true})
+      }
+    ))
+  }
+  componentDidMount(){
+    this._sub = this.props.navigation.addListener(
+      'didFocus',
+      this.getSessions
+    );
+    fetch(`http://${localhost}/api/listings/mySessionsP`,{method:"GET",credentials:"include"}).then(res => res.json().then(
+      data => {
+        this.setState({waiting:data.resultsWaiting,accepted:data.resultsAccepted,declined:data.resultsDeclined,show:true})
       }
     ))
   }
 
   render() {
-    if(this.state.mySessionsP){
+    if(this.state.waiting){
     return (
       <SafeAreaView style={{flex:1}}>
         <HeaderHospeasy />
@@ -45,8 +56,14 @@ export default class MySessions extends React.Component {
           </View>
         </View>
         <ScrollView>
-          {this.state.participantUnderline && this.state.mySessionsP.map(listing =>{
-            return(<SessionItems key={listing._id} informationListing={listing}/>)
+          {this.state.participantUnderline && this.state.waiting.map(listing =>{
+            return(<SessionItems key={listing._id} progress="In Request" informationListing={listing}  backgroundColor="#f1c40f"/>)
+          })}
+          {this.state.participantUnderline && this.state.accepted.map(listing =>{
+            return(<SessionItems key={listing._id} progress="Accepted" informationListing={listing}  backgroundColor="#2ecc71"/>)
+          })}
+          {this.state.participantUnderline && this.state.declined.map(listing =>{
+            return(<SessionItems key={listing._id} progress="Declined" informationListing={listing} backgroundColor="#ff5a5f"/>)
           })}
           {!this.state.participantUnderline && <MyHostSessions navigation={this.props.navigation}/>}
         </ScrollView>

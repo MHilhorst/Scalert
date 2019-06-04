@@ -13,8 +13,17 @@ export default class PlaceListing extends React.Component {
 
     }
     this.handleUploadSubmit = this.handleUploadSubmit.bind(this)
+    this.getUser = this.getUser.bind(this)
   }
 
+  getUser(){
+    fetch(`http://${localhost}/api/profile`, {
+      credentials:'include',
+      method:"GET"
+    }).then(res=>res.json().then(data => {
+        this.setState({data:data})
+    })).catch(err => console.log(err))
+  }
   handleUploadSubmit(){
     fetch(`http://${localhost}/api/listings/addMobile`,{
       method:"POST",
@@ -24,7 +33,9 @@ export default class PlaceListing extends React.Component {
           'content-type':'application/json'
       },
       body:JSON.stringify({"upload":this.state.image,"name":this.state.listingName,"id":this.state.data._id,"description":this.state.description,"location":this.state.location,"monthly":this.state.monthly,"amountOfParticipants":this.state.amountOfParticipants,"hospiDate":this.state.date})
-    }).then(response => response.json().then(data => this.setState({data}))).catch(err => console.log(err))
+    }).then(response => response.json()).then(data => {
+      this.props.navigation.navigate('Listing',{listingId:data.newListing._id,listingName:data.newListing.name})
+     }).catch(err => console.log(err))
   }
 
   _pickImage = async () => {
@@ -39,16 +50,15 @@ export default class PlaceListing extends React.Component {
   }
 };
   componentDidMount(){
+    this._sub = this.props.navigation.addListener(
+      'didFocus',
+      this.getUser
+    );
     fetch(`http://${localhost}/api/profile`, {
       credentials:'include',
       method:"GET"
     }).then(res=>res.json().then(data => {
-      if(data.error){
-        this.setState({authenticated:false})
-      }if(data.username){
-        this.props.handleAuthentication()
-        this.setState({authenticated:true})
-      }
+        this.setState({data:data})
     })).catch(err => console.log(err))
   }
 
@@ -65,7 +75,7 @@ export default class PlaceListing extends React.Component {
         <ScrollView>
         <View>
           <View style={styles.red}>
-            <Text style={styles.listHeader}>Basic Information</Text>
+            <Text style={styles.listHeader}>Streetname + number</Text>
           <List style={{marginRight:20}}>
             <ListItem>
             <TextInput
@@ -75,7 +85,7 @@ export default class PlaceListing extends React.Component {
               style={styles.input}
             />
             </ListItem>
-            <Text style={styles.listHeader}>Location</Text>
+            <Text style={styles.listHeader}>City</Text>
             <ListItem>
             <TextInput
               value={this.state.location}

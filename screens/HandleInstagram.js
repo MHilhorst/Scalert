@@ -16,14 +16,16 @@ class HandleInstagram extends React.Component{
     };
 
   componentDidMount(){
-    fetch(`http://${localhost}/api/instagram/authorize_user`, {
+    fetch(`http://hospeasy.nl:5000/api/instagram/authorize_user`, {
           method: 'POST',
           credentials: 'include',
           headers: {
           "Content-Type": "application/json"
-          }
+        },body:JSON.stringify({userId:this.props.profile._id})
         }).then(response => response.json().then(data => {
-          this.setState({data})}
+          this.setState({data})
+          console.log(data)
+        }
         )).catch(err => console.log(err))
   }
   render(){

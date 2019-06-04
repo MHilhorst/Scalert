@@ -55,6 +55,7 @@ class ProfileForSession extends React.Component {
               <View style={{marginTop:10,justifyContent:'center',alignItems:'center'}}>
                 <Text style={{fontSize:27,fontWeight:'800'}}>{this.state.data.name || "No Name Given"}</Text>
                 <Text style={{fontSize:14,marginTop:10}}>{this.state.data.age || "0 Years"}</Text>
+                <Text style={{fontSize:14,marginTop:30}}>{this.state.data.description  || "No description filled in"}</Text>
               </View>
             </View>
             </View>

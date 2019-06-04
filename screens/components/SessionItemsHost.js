@@ -22,7 +22,7 @@ class SessionItems extends React.Component{
             <View style={{alignItems:'center',justifyContent:'center'}}>
               <View style={{backgroundColor:'#ff5a5f',paddingTop:10,paddingBottom:10,paddingLeft:20,paddingRight:20,borderRadius:5}}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Dashboard',{listingId:this.props.informationListing._id})}>
-                <Text style={{color:"white"}}>View</Text>
+                <Text style={{color:"white"}}>{this.props.ended}</Text>
                 </TouchableOpacity>
               </View>
             </View>

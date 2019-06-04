@@ -10,24 +10,30 @@ function Auth(ComponentToProtect) {
         loading: true,
         authenticated: false
       }
+      this.getUser = this.getUser.bind(this)
+    }
+
+    getUser(){
+      fetch(`http://${localhost}/api/profile`,{method:"GET",credentials:'include'}).then(res => res.json().then(data => {
+        if(data.username){
+          this.setState({authenticated:true,loading:false})
+        }else{
+          this.setState({authenticated:false,loading:false})
+        }
+      }))
     }
 
     componentDidMount(){
-      fetch(`http://${localhost}/api/profile`, {
-        credentials:'include',
-        method:"GET"
-      }).then(res=>res.json().then(data => {
-        if(data.error){
-          this.setState({authenticated:false})
-        }if(data.username){
-          this.setState({authenticated:true})
-        }
-      })).catch(err => console.log(err))
+      this._sub = this.props.navigation.addListener(
+        'didFocus',
+        this.getUser
+      );
     }
 
   render(){
+    if(!this.state.loading){
     if(!this.state.authenticated){
-      return(        <View style={{flex:1}}>
+      return(<View style={{flex:1}}>
               <HeaderHospeasy />
                 <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
                   <View>
@@ -42,15 +48,15 @@ function Auth(ComponentToProtect) {
                   </View>
                 </View>
               </View>)
-    }if(this.state.authenticated){
-    console.log("yes")
+    }
+    if(this.state.authenticated){
     return (
         <ComponentToProtect navigation={this.props.navigation} authentication={this.handleAuthentication}/>
     );
-  }else{
+  }}else{
     return null
   }
   }
-  }
+}
 }
 export default Auth;

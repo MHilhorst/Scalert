@@ -7,6 +7,7 @@ import * as Animatable from 'react-native-animatable';
 import Profile from './Profile';
 import RadioGroup from 'react-native-radio-buttons-group';
 import Icon from 'react-native-vector-icons/Ionicons';
+import HandleInstagram from './HandleInstagram';
 const localhost = require('../config');
 
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -17,6 +18,9 @@ export default class Register extends React.Component {
     this.state = {
       placeholderText:"Enter your Name",
       showName:true,
+      name:"",
+      email:"",
+      showEmpty:false,
       displayText:"Welcome, Please fill in your Name!",
       showKeyBoardInitialize:true,
       data: [
@@ -54,12 +58,16 @@ export default class Register extends React.Component {
   }
 
   email(){
-    this.setState({showName:false,showEmail:true,placeholderText:"Enter your email",displayText:"What is your E-mail?",showKeyBoardInitialize:false},()=>{
-    this.refs.textInputMobile1.focus()
-    })
+    if(this.state.name.length > 0){
+      this.setState({showEmpty:false,showName:false,showEmail:true,placeholderText:"Enter your email",displayText:"What is your E-mail?",showKeyBoardInitialize:false},()=>{
+      this.refs.textInputMobile1.focus()
+      })
+    }else{
+      this.setState({showEmpty:true})
+    }
   }
   password(){
-    console.log(this.state.email)
+    if(this.state.email.length > 0){
     fetch(`http://${localhost}/api/duplicateUsername/${this.state.email}`,{
       method:"GET",
       headers:{
@@ -67,14 +75,17 @@ export default class Register extends React.Component {
       },
     }).then(res => res.json().then(data => {
       if(data.error){
-        this.setState({showInvalid:true})
+        this.setState({showInvalid:true,showEmpty:false})
       }else{
-        this.setState({showInvalid:false,showEmail:false,showPassword:true,placeholderText:"Enter a secure password!",displayText:"Don't tell your password to anyone"},()=>{
+        this.setState({showInvalid:false,showEmpty:false,showEmail:false,showPassword:true,placeholderText:"Enter a secure password!",displayText:"Don't tell your password to anyone"},()=>{
         this.refs.textInputMobile2.focus()
         })
       }
     })).catch(err => console.log(err))
+  }else{
+    this.setState({showEmpty:true})
   }
+}
   gender(){
     this.setState({showGender:true,showPassword:false,displayText:"What's your Gender?"})
   }
@@ -85,6 +96,7 @@ export default class Register extends React.Component {
     });
 
   }
+
 
   decreaseHeightOfLogin(){
     Keyboard.dismiss()
@@ -147,7 +159,7 @@ export default class Register extends React.Component {
           </Animated.View>
 
         <ImageBackground
-          source={require('../assets/backgroundregister.png')}
+          source={require('../assets/background.jpg')}
           style={{flex:1}}
           >
         <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
@@ -183,6 +195,7 @@ export default class Register extends React.Component {
                   {this.state.showEmail && <TextInput
                     ref="textInputMobile1"
                     value={this.state.email}
+                    autoCapitalize = 'none'
                     onChangeText={(email) => this.setState({ email })}
                     placeholder={this.state.placeholderText}
                     underlineColorAndroid='transparent'
@@ -193,6 +206,7 @@ export default class Register extends React.Component {
                   {this.state.showPassword && <TextInput
                     ref="textInputMobile2"
                     value={this.state.password}
+                    autoCapitalize = 'none'
                     onChangeText={(password) => this.setState({ password })}
                     placeholder={this.state.placeholderText}
                     underlineColorAndroid='transparent'
@@ -216,10 +230,10 @@ export default class Register extends React.Component {
                     style={{borderBottomColor: '#ebebeb',color:"#484848",marginHorizontal:15,fontSize:20}}
                   />}
 
-
               </Animated.View>
             </Animated.View>
-              {this.state.showInvalid && <Text style={{marginHorizontal:70,color:'red'}}>This username is already taken</Text>}
+              {this.state.showInvalid && <Text style={{marginHorizontal:70,color:'red'}}>This email address is already taken</Text>}
+              {this.state.showEmpty && <Text style={{marginHorizontal:70,color:'red'}}>Field can't be empty</Text>}
             </TouchableOpacity>
           </Animated.View>
         </Animatable.View>

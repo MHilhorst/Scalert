@@ -70,6 +70,7 @@ export default class Profile extends React.Component {
           value={this.state.username}
           onChangeText={(username) => this.setState({ username })}
           placeholder={'Username'}
+          autoCapitalize = 'none'
           selectionColor={BLUE}
           style={styles.input}
         />
@@ -78,6 +79,7 @@ export default class Profile extends React.Component {
           onChangeText={(password) => this.setState({ password })}
           placeholder={'Password'}
           secureTextEntry={true}
+          autoCapitalize = 'none'
           selectionColor={BLUE}
           style={styles.input}
         />
